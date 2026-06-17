@@ -1,10 +1,13 @@
-# 🛍️ DataShop SQL — Modelagem e Análise de Dados de E-commerce
+# 🛍️ DataShop SQL & ETL — Modelagem e Pipeline de Dados de E-commerce
 
-Projeto de modelagem relacional e análise de dados usando SQL puro, simulando o banco de dados de um e-commerce fictício chamado DataShop.
+Projeto de modelagem relacional, análise SQL e pipeline ETL em Python, simulando o banco de dados de um e-commerce fictício chamado DataShop.
 
 ## 📌 Sobre o projeto
 
-Este projeto demonstra a construção de um banco de dados relacional do zero, incluindo modelagem de entidades, relacionamentos com chaves estrangeiras, inserção de dados e queries analíticas para responder perguntas reais de negócio.
+Este projeto demonstra duas etapas complementares da engenharia de dados:
+
+1. **Modelagem e análise** — construção de um banco relacional do zero, com chaves estrangeiras e queries analíticas (SQL puro)
+2. **Pipeline ETL** — automação da extração, limpeza e carga de dados usando Python e Pandas
 
 ## 🗂️ Estrutura do banco de dados
 
@@ -30,8 +33,19 @@ vendedores─┘
 | `sql/01_criar_tabelas.sql` | Criação das 5 tabelas com chaves primárias e estrangeiras |
 | `sql/02_inserir_dados.sql` | Inserção de dados de exemplo |
 | `sql/03_queries_analise.sql` | 5 queries respondendo perguntas de negócio |
+| `python/06_pandas_intro.py` | Introdução à exploração de dados com Pandas |
+| `python/07_limpeza_dados.py` | Limpeza de dados: duplicatas, nulos e espaços extras |
+| `python/09_etl_completo.py` | Pipeline ETL completo: Extract, Transform, Load |
 
-## 📊 Perguntas de negócio respondidas
+## 🔄 Pipeline ETL
+
+O pipeline lê um arquivo CSV simulando novos pedidos recebidos diariamente, identifica e corrige problemas comuns de dados reais, e carrega os dados limpos no PostgreSQL:
+
+**Extract** → Lê o CSV `pedidos_novos.csv` com Pandas
+**Transform** → Remove duplicatas, espaços em branco e preenche valores nulos
+**Load** → Insere os dados limpos na tabela `vendas` do PostgreSQL
+
+## 📊 Perguntas de negócio respondidas (SQL)
 
 1. Quais produtos, vendedores e clientes formam o histórico completo de vendas?
 2. Qual vendedor gerou mais receita?
@@ -42,23 +56,36 @@ vendedores─┘
 ## 🛠️ Tecnologias utilizadas
 
 - PostgreSQL
-- SQL (DDL, DML, JOINs, agregações)
+- SQL (DDL, DML, JOINs, agregações, CTEs, Window Functions)
+- Python (Pandas, psycopg2, python-dotenv)
 
 ## 🚀 Como executar
 
+### Banco de dados
 1. Crie um banco de dados PostgreSQL
-2. Execute os arquivos na ordem:
-01_criar_tabelas.sql
+2. Execute os arquivos `sql/` na ordem numérica
 
-02_inserir_dados.sql
+### Pipeline ETL
+1. Crie um arquivo `.env` na raiz do projeto com suas credenciais:
+DB_HOST=localhost
 
-03_queries_analise.sql
+DB_NAME=loja
+
+DB_USER=postgres
+
+DB_PASSWORD=sua_senha
+
+DB_PORT=5432
+2. Instale as dependências:
+pip install pandas psycopg2-binary python-dotenv
+3. Execute o pipeline:
+python python/09_etl_completo.py
 
 ## 📈 Próximos passos
 
-- Adicionar orquestração com Apache Airflow
+- Orquestrar o pipeline com Apache Airflow
 - Containerizar o ambiente com Docker
-- Criar dashboard de visualização dos dados
+- Criar testes automatizados para validar a qualidade dos dados
 
 ---
 

@@ -1,0 +1,6 @@
+nome_cliente,email,produto,quantidade,preco_unitario,data_pedido
+Fernanda Lima,fernanda@email.com,Notebook Dell,1,3500.00,2024-02-01
+Gustavo Reis, gustavo@email.com ,Mouse Logitech,2,150.00,2024-02-01
+Helena Souza,helena@email.com,Monitor LG,1,1200.00,2024-02-02
+Fernanda Lima,fernanda@email.com,Notebook Dell,1,3500.00,2024-02-01
+Igor Mendes,igor@email.com,Teclado Mecânico,,350.00,2024-02-03
