@@ -1,3 +1,7 @@
+# 🛍️ DataShop — Pipeline de Dados de E-commerce
+
+Projeto completo de engenharia de dados simulando o banco de dados de um e-commerce fictício chamado DataShop — da modelagem relacional até a orquestração automatizada com Apache Airflow.
+
 ## 📌 Sobre o projeto
 
 Este projeto cobre o ciclo completo de engenharia de dados:
