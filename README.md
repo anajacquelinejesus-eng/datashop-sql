@@ -1,9 +1,3 @@
-O README está desatualizado — ainda fala que Airflow e Docker são "próximos passos", mas você já fez tudo isso! Vamos atualizar.
-Abre o README.md no VS Code, apaga tudo e cola essa versão nova:
-markdown# 🛍️ DataShop — Pipeline de Dados de E-commerce
-
-Projeto completo de engenharia de dados simulando o banco de dados de um e-commerce fictício chamado DataShop — da modelagem relacional até a orquestração automatizada com Apache Airflow.
-
 ## 📌 Sobre o projeto
 
 Este projeto cobre o ciclo completo de engenharia de dados:
