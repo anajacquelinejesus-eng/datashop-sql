@@ -1,53 +1,65 @@
-# 🛍️ DataShop SQL & ETL — Modelagem e Pipeline de Dados de E-commerce
+O README está desatualizado — ainda fala que Airflow e Docker são "próximos passos", mas você já fez tudo isso! Vamos atualizar.
+Abre o README.md no VS Code, apaga tudo e cola essa versão nova:
+markdown# 🛍️ DataShop — Pipeline de Dados de E-commerce
 
-Projeto de modelagem relacional, análise SQL e pipeline ETL em Python, simulando o banco de dados de um e-commerce fictício chamado DataShop.
+Projeto completo de engenharia de dados simulando o banco de dados de um e-commerce fictício chamado DataShop — da modelagem relacional até a orquestração automatizada com Apache Airflow.
 
 ## 📌 Sobre o projeto
 
-Este projeto demonstra duas etapas complementares da engenharia de dados:
+Este projeto cobre o ciclo completo de engenharia de dados:
 
-1. **Modelagem e análise** — construção de um banco relacional do zero, com chaves estrangeiras e queries analíticas (SQL puro)
-2. **Pipeline ETL** — automação da extração, limpeza e carga de dados usando Python e Pandas
+1. **Modelagem relacional** — banco de dados do zero com chaves estrangeiras e queries analíticas
+2. **Pipeline ETL** — extração, limpeza e carga de dados com Python e Pandas
+3. **Containerização** — ambiente reproduzível com Docker e Docker Compose
+4. **Orquestração** — pipeline agendado e monitorado com Apache Airflow
 
 ## 🗂️ Estrutura do banco de dados
 
-O banco simula um e-commerce com 5 entidades principais:
+O banco simula um e-commerce com 5 entidades:
 
 - **clientes** — pessoas que fazem pedidos
 - **vendedores** — responsáveis pelos pedidos
 - **produtos** — itens disponíveis para venda
 - **pedidos** — registra cada compra (conecta cliente e vendedor)
-- **itens_pedido** — produtos dentro de cada pedido (relação muitos-para-muitos)
-
-## 🔗 Diagrama de relacionamento
+- **itens_pedido** — produtos dentro de cada pedido (muitos-para-muitos)
 clientes ──┐
-
 ├── pedidos ──── itens_pedido ──── produtos
-
 vendedores─┘
 
 ## 📁 Organização dos arquivos
 
 | Arquivo | Descrição |
 |---------|-----------|
-| `sql/01_criar_tabelas.sql` | Criação das 5 tabelas com chaves primárias e estrangeiras |
+| `sql/01_criar_tabelas.sql` | Criação das 5 tabelas com PKs e FKs |
 | `sql/02_inserir_dados.sql` | Inserção de dados de exemplo |
 | `sql/03_queries_analise.sql` | 5 queries respondendo perguntas de negócio |
-| `python/06_pandas_intro.py` | Introdução à exploração de dados com Pandas |
-| `python/07_limpeza_dados.py` | Limpeza de dados: duplicatas, nulos e espaços extras |
-| `python/09_etl_completo.py` | Pipeline ETL completo: Extract, Transform, Load |
+| `python/09_etl_completo.py` | Pipeline ETL: Extract, Transform, Load |
+| `python/10_etl_pratica.py` | Segundo pipeline ETL desenvolvido de forma independente |
+| `dags/dag_datashop.py` | DAG do Airflow orquestrando o pipeline ETL |
+| `docker-compose.yml` | PostgreSQL containerizado com volume persistente |
+| `docker-compose-airflow.yaml` | Stack completa do Airflow (webserver, scheduler, worker) |
 
 ## 🔄 Pipeline ETL
 
-O pipeline lê um arquivo CSV simulando novos pedidos recebidos diariamente, identifica e corrige problemas comuns de dados reais, e carrega os dados limpos no PostgreSQL:
+O pipeline lê um arquivo CSV simulando pedidos recebidos diariamente, corrige problemas comuns de dados reais, e carrega os dados limpos no PostgreSQL:
 
-**Extract** → Lê o CSV `pedidos_novos.csv` com Pandas
-**Transform** → Remove duplicatas, espaços em branco e preenche valores nulos
-**Load** → Insere os dados limpos na tabela `vendas` do PostgreSQL
+- **Extract** → Lê `pedidos_novos.csv` com Pandas
+- **Transform** → Remove duplicatas, trata valores nulos e limpa espaços extras
+- **Load** → Insere os dados limpos na tabela `vendas` do PostgreSQL
+
+## 🤖 Orquestração com Airflow
+
+O pipeline é orquestrado pelo Apache Airflow, rodando automaticamente todo dia via DAG:
+
+```python
+extrair_task >> transformar_task >> carregar_task
+```
+
+A interface web do Airflow (porta 8080) permite monitorar cada execução, ver logs detalhados e reprocessar dados em caso de falha.
 
 ## 📊 Perguntas de negócio respondidas (SQL)
 
-1. Quais produtos, vendedores e clientes formam o histórico completo de vendas?
+1. Histórico completo de vendas (cliente, vendedor, produto)
 2. Qual vendedor gerou mais receita?
 3. Qual cliente gastou mais no total?
 4. Quais pedidos ainda não foram entregues?
@@ -55,37 +67,42 @@ O pipeline lê um arquivo CSV simulando novos pedidos recebidos diariamente, ide
 
 ## 🛠️ Tecnologias utilizadas
 
-- PostgreSQL
-- SQL (DDL, DML, JOINs, agregações, CTEs, Window Functions)
-- Python (Pandas, psycopg2, python-dotenv)
+- **PostgreSQL** — banco de dados relacional
+- **SQL** — DDL, DML, JOINs, CTEs, Window Functions, subqueries
+- **Python** — Pandas, psycopg2, python-dotenv
+- **Docker + Docker Compose** — containerização e reprodutibilidade
+- **Apache Airflow** — orquestração e agendamento de pipelines
 
 ## 🚀 Como executar
 
-### Banco de dados
-1. Crie um banco de dados PostgreSQL
-2. Execute os arquivos `sql/` na ordem numérica
+### Banco de dados (Docker)
+```bash
+docker compose up -d
+```
 
-### Pipeline ETL
-1. Crie um arquivo `.env` na raiz do projeto com suas credenciais:
-DB_HOST=localhost
+### Pipeline ETL manual
+```bash
+# Crie o arquivo .env com suas credenciais
+cp .env.example .env
 
-DB_NAME=loja
-
-DB_USER=postgres
-
-DB_PASSWORD=sua_senha
-
-DB_PORT=5432
-2. Instale as dependências:
+# Instale as dependências
 pip install pandas psycopg2-binary python-dotenv
-3. Execute o pipeline:
+
+# Execute
 python python/09_etl_completo.py
+```
 
-## 📈 Próximos passos
+### Airflow (orquestração automática)
+```bash
+# Inicializar
+docker compose -f docker-compose-airflow.yaml up airflow-init
 
-- Orquestrar o pipeline com Apache Airflow
-- Containerizar o ambiente com Docker
-- Criar testes automatizados para validar a qualidade dos dados
+# Subir todos os serviços
+docker compose -f docker-compose-airflow.yaml up -d
+
+# Acessar interface: http://localhost:8080
+# Login: airflow / airflow
+```
 
 ---
 
